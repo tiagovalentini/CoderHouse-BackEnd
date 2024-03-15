@@ -11,6 +11,8 @@ class ProductManagerfs {
     if (!exist) {
       fs.writeFileSync(this.path, JSON.stringify([], null, 2));
       console.log("archivo creado");
+    }else{
+        console.log('el archivo ya esta creado')
     }
   }
   async create(data) {
@@ -32,8 +34,8 @@ class ProductManagerfs {
         let array = await fs.promises.readFile(this.path, "utf-8");
         array = JSON.parse(array);
         array.push(Prodcuto);
-        array = JSON.stringify(array);
-        await fs.promises.writeFile(array);
+        array = JSON.stringify(array, null, 2);
+        await fs.promises.writeFile(this.path, array);
       }
     } catch (error) {
       throw error;
@@ -80,7 +82,7 @@ class ProductManagerfs {
         const final = array.filter((each) => each.id !== id);
         await fs.promises.writeFile(this.path, JSON.stringify(final, null, 2));
         console.log("se ha eliminado el objeto");
-        return array;
+        return final;
       }
     } catch (error) {
       throw error;
@@ -91,12 +93,17 @@ class ProductManagerfs {
 async function test() {
   try {
     const productosfs = new ProductManagerfs();
-    productosfs.create();
-    productosfs.readOne();
-    productosfs.read();
-    productosfs.destroy();
+    productosfs.create({
+        title: "Lampara",
+        photo:
+          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.boutiquedeluz.com%2Fproducto%2Flampara-colgante-onion-disponible-en-varios-colores-y-tamanos%2F&psig=AOvVaw1LyobtV4K254mWE4xdlAtq&ust=1710104163467000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCIj629CI6IQDFQAAAAAdAAAAABAI",
+        category: "Hogar",
+        price: 30000,
+        stock: 70000,
+      });
+    
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 }
 test();

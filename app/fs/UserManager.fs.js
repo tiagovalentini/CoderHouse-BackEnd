@@ -29,8 +29,8 @@ class UserManagerfs {
         let array = await fs.promises.readFile(this.path, "utf-8");
         array = JSON.parse(array);
         array.push(Usuario);
-        array = JSON.stringify(array);
-        await fs.promises.writeFile(array);
+        array = JSON.stringify(array, null, 2);
+        await fs.promises.writeFile(this.path, array);
       }
     } catch (error) {
       throw error;
@@ -77,7 +77,7 @@ class UserManagerfs {
             const final = array.filter((each) => each.id !== id);
             await fs.promises.writeFile(this.path,JSON.stringify(final, null, 2))
             console.log('se ha eliminado el objeto')
-            return array;
+            return final;
         }
       } catch (error) {
         throw error;
@@ -93,7 +93,7 @@ async function test() {
     usuariosfs.read();
     usuariosfs.destroy();
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 }
 test();
